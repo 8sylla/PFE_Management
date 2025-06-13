@@ -1,67 +1,99 @@
 <x-guest-layout>
-    <form method="POST" enctype="multipart/form-data" action="{{ route('register') }}">
-        @csrf
+    <div class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="relative flex flex-col m-6 space-y-8 bg-white shadow-2xl rounded-2xl md:flex-row md:space-y-0">
+            <!-- Left Side (Form) -->
+            <div class="flex flex-col justify-center p-8 md:p-12">
+                <span class="mb-3 text-4xl font-bold">Inscription</span>
+                <span class="font-light text-gray-400 mb-8">
+                    Veuillez remplir les informations pour créer votre compte
+                </span>
+                
+                <form method="POST" enctype="multipart/form-data" action="{{ route('register') }}" class="space-y-6">
+                    @csrf
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                    <!-- Profile Image Upload -->
+                    <div class="flex items-center space-x-4">
+                        <img id="image_preview" src="https://via.placeholder.com/80" alt="profile_image" class="w-20 h-20 rounded-full object-cover">
+                        <div>
+                            <label for="image" class="block text-sm font-medium text-gray-700">Image de profil</label>
+                            <input id="image" name="image" type="file" onchange="previewImage(event)" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                            <x-input-error :messages="$errors->get('image')" class="mt-2" />
+                        </div>
+                    </div>
+
+                    <!-- Name -->
+                    <div>
+                        <x-input-label for="name" value="Nom Complet" />
+                        <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
+                        <x-input-error :messages="$errors->get('name')" class="mt-2" />
+                    </div>
+
+                    <!-- Email Address -->
+                    <div>
+                        <x-input-label for="email" value="Email Institutionnel" />
+                        <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+                        <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                    </div>
+
+                    <!-- Encadrant -->
+                    <div>
+                        <x-input-label for="enseignant_id" value="Choisir l'encadrant" />
+                        <select id="enseignant_id" name="enseignant_id" class="block mt-1 w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <option selected disabled>-- Sélectionnez votre encadrant --</option>
+                            @foreach($enseignant as $ens)
+                                <option value="{{ $ens->id }}" {{ old('enseignant_id') == $ens->id ? 'selected' : '' }}>{{ $ens->name }}</option>
+                            @endforeach
+                        </select>
+                        <x-input-error :messages="$errors->get('enseignant_id')" class="mt-2" />
+                    </div>
+
+                    <!-- Password -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <x-input-label for="password" value="Mot de passe" />
+                            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
+                            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+                        </div>
+                        <div>
+                            <x-input-label for="password_confirmation" value="Confirmer le mot de passe" />
+                            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
+                            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                        </div>
+                    </div>
+
+                    <!-- Register Button -->
+                    <div>
+                        <x-primary-button class="w-full flex justify-center">
+                            S'inscrire
+                        </x-primary-button>
+                    </div>
+
+                    <div class="text-center text-sm text-gray-600">
+                        Déjà un compte?
+                        <a class="underline hover:text-gray-900" href="{{ route('login') }}">
+                            Se connecter
+                        </a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Side (Branding) -->
+            <div class="relative hidden md:block">
+                <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
+                     alt="img"
+                     class="w-[400px] h-full hidden rounded-r-2xl object-cover md:block">
+            </div>
         </div>
+    </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
-
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
-        <div class="flex mt-4 items-center justify-center">
-            <label for="profile_image" class="cursor-pointer inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 rounded-lg border border-gray-300 hover:bg-gray-300 focus:outline-none focus:border-blue-300 focus:ring focus:ring-blue-200">
-                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M15.293 4.293a1 1 0 0 1 1.414 1.414L10 13.414l-3.707-3.707a1 1 0 0 1 1.414-1.414L10 10.586l4.293-4.293a1 1 0 0 1 1.414 0z" clip-rule="evenodd" />
-                </svg>
-                <span>Select Image</span>
-                <input id="profile_image" type="file" class="hidden" name="image" >
-            </label>
-        </div>
-        <div class="mt-4">
-        <select class="border rounded" name="enseignant_id">
-            <option selected disabled>Choisir l'encadrant</option>
-            @foreach($enseignant as $ens)
-                <option value="{{ $ens->id }}">{{ $ens->name }}</option>
-            @endforeach
-        </select></div>
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
+    <script>
+        function previewImage(event) {
+            const reader = new FileReader();
+            reader.onload = function(){
+                const output = document.getElementById('image_preview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </x-guest-layout>

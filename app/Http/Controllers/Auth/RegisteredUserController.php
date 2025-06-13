@@ -35,21 +35,33 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'enseignant_id' => 'required|exists:enseignants,id',
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => [
+                'required',
+                'string',
+                'lowercase',
+                'email',
+                'max:255',
+                'unique:'.User::class,
+                // --- AJOUTEZ CETTE LIGNE ---
+                'ends_with:@etu.uae.ac.ma,@uae.ac.ma' 
+            ],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'image' => 'image|mimes:jpeg,png,jpg,gif'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048' // Ajout de nullable et max size
         ]);
-        if ($request->has('image')) {
-            $image = $request->image;
+
+        $imageName = null; // Initialiser à null
+        if ($request->hasFile('image')) { // Utiliser hasFile pour plus de sécurité
+            $image = $request->file('image');
             $imageName = time() . '.' . $image->getClientOriginalExtension();
-            $image->move('images_profil', $imageName);
+            $image->move(public_path('images_profil'), $imageName); // Utiliser public_path()
         }
+
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'enseignant_id' => $request->enseignant_id,
             'password' => Hash::make($request->password),
-            "image"=>$imageName
+            "image" => $imageName,
         ]);
 
         event(new Registered($user));
