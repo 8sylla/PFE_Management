@@ -5,6 +5,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\FicheController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SoutenanceController;
+use App\Http\Controllers\DocumentController;
 
 // Page d'accueil publique
 Route::get('/', function () {
@@ -30,6 +31,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     
     // Consultation de la soutenance par l'étudiant
     Route::get('/ma-soutenance', [SoutenanceController::class, 'showStudentSoutenance'])->name('soutenance.student.show');
+
+
+    // ... autres routes ...
+    Route::resource('documents', DocumentController::class)->only(['index', 'store', 'destroy']);
 });
 
 // Inclure les fichiers de routes spécifiques

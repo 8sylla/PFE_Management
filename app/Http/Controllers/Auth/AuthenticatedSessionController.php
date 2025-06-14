@@ -36,7 +36,7 @@ class AuthenticatedSessionController extends Controller
     }
     public function mysoutenance()
 {
-    $etudiant = auth()->user();
+    $etudiant = auth()->user(); 
     $soutenance = $etudiant->soutenance()->with(['enseignant', 'jury', 'sale'])->first();  
     return view('layouts.studentsoutenance', compact('soutenance'));
 }

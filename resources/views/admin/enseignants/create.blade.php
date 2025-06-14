@@ -1,11 +1,11 @@
 @extends('auth.admindashboard')
 
 @section('title', 'Ajouter un Encadrant')
-
 @section('page-title', 'Nouvel Encadrant')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('admin.ens') }}">Encadrants</a></li>
+    {{-- LIEN CORRIGÉ DANS LE FIL D'ARIANE --}}
+    <li class="breadcrumb-item"><a href="{{ route('admin.enseignants.index') }}">Encadrants</a></li>
     <li class="breadcrumb-item active">Ajouter</li>
 @endsection
 
@@ -16,9 +16,11 @@
             <div class="card-header">
                 <h3 class="card-title">Formulaire de création d'un encadrant</h3>
             </div>
-            <div class="card-body">
-                <form action="{{ route('admin.createens') }}" method="POST" novalidate>
-                    @csrf
+            
+            {{-- ACTION DU FORMULAIRE CORRIGÉE --}}
+            <form action="{{ route('admin.enseignants.store') }}" method="POST">
+                @csrf
+                <div class="card-body">
                     <div class="form-group mb-3">
                         <label for="name">Nom complet</label>
                         <div class="input-group">
@@ -55,15 +57,15 @@
                         <small class="form-text text-muted">L'enseignant pourra changer ce mot de passe plus tard.</small>
                         @error('password')<div class="text-danger mt-1">{{ $message }}</div>@enderror
                     </div>
-
-                    <div class="card-footer bg-transparent text-right">
-                        <a href="{{ route('admin.ens') }}" class="btn btn-secondary mr-2">Annuler</a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-plus-circle mr-2"></i>Créer l'Encadrant
-                        </button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="card-footer bg-transparent text-right">
+                    {{-- LIEN D'ANNULATION CORRIGÉ --}}
+                    <a href="{{ route('admin.enseignants.index') }}" class="btn btn-secondary mr-2">Annuler</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-plus-circle mr-2"></i>Créer l'Encadrant
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

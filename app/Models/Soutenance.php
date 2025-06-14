@@ -33,6 +33,6 @@ class Soutenance extends Model
     }
     public function etudiant()
     {
-        return $this->belongsTo(User::class, 'etudiant_id');
+        return $this->belongsTo(User::class, 'etudiant_id', 'id');
     }
 }

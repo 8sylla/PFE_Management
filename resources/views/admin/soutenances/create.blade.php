@@ -4,7 +4,8 @@
 @section('page-title', 'Nouvelle Soutenance')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('showsoutenance') }}">Soutenances</a></li>
+    {{-- LIEN CORRIGÉ DANS LE FIL D'ARIANE --}}
+    <li class="breadcrumb-item"><a href="{{ route('admin.soutenances.index') }}">Soutenances</a></li>
     <li class="breadcrumb-item active">Planifier</li>
 @endsection
 
@@ -18,7 +19,8 @@
         </h3>
     </div>
     <div class="card-body">
-        <form method="GET" action="{{ route('addsoutenance') }}">
+        {{-- ACTION DU FORMULAIRE CORRIGÉE --}}
+        <form method="GET" action="{{ route('admin.soutenances.create') }}">
             <div class="form-group">
                 <label>Sélectionner un étudiant n'ayant pas encore de soutenance :</label>
                 <select name="etudiant_id" class="form-control select2" style="width: 100%;" onchange="this.form.submit()">
@@ -35,7 +37,7 @@
 </div>
 
 <!-- Etape 2: Remplir les détails de la soutenance (s'affiche si un étudiant est sélectionné) -->
-@if(request('etudiant_id'))
+@if(request('etudiant_id') && $selectedStudent)
 <div class="card card-outline card-success" style="animation: fadeIn 0.5s;">
     <div class="card-header">
         <h3 class="card-title">
@@ -43,7 +45,8 @@
             Étape 2 : Planifier la soutenance pour <span class="font-weight-bold">{{ $selectedStudent->name }}</span>
         </h3>
     </div>
-    <form method="POST" action="{{ route('create_soutenance') }}">
+    {{-- ACTION DU FORMULAIRE CORRIGÉE --}}
+    <form method="POST" action="{{ route('admin.soutenances.store') }}">
         @csrf
         <input type="hidden" name="etudiant_id" value="{{ $selectedStudent->id }}">
         <div class="card-body">
@@ -52,7 +55,7 @@
                     <div class="form-group">
                         <label for="enseignant_id">Encadrant Pédagogique (automatique)</label>
                         <input type="text" class="form-control" value="{{ $encadrent->name ?? 'Non défini' }}" readonly>
-                        <input type="hidden" name="enseignant_id" value="{{ $encadrent->id ?? '' }}">
+                        {{-- On ne soumet pas l'id de l'enseignant, il sera récupéré dans le contrôleur --}}
                     </div>
                 </div>
                  <div class="col-md-6">
@@ -91,7 +94,8 @@
             </div>
         </div>
         <div class="card-footer text-right">
-             <a href="{{ route('addsoutenance') }}" class="btn btn-secondary">Annuler</a>
+             {{-- LIEN D'ANNULATION CORRIGÉ --}}
+             <a href="{{ route('admin.soutenances.create') }}" class="btn btn-secondary">Annuler la sélection</a>
             <button type="submit" class="btn btn-success"><i class="fas fa-check-circle mr-2"></i>Valider la Planification</button>
         </div>
     </form>
@@ -100,10 +104,3 @@
 
 <style> @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } } </style>
 @endsection
-
-@push('scripts')
-<script>
-    // Le code JQuery pour initialiser select2 est déjà dans le layout principal.
-    // Pas besoin de code supplémentaire ici.
-</script>
-@endpush

@@ -4,7 +4,8 @@
 @section('page-title', 'Nouveau Jury')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('jury') }}">Jurys</a></li>
+    {{-- LIEN CORRIGÉ DANS LE FIL D'ARIANE --}}
+    <li class="breadcrumb-item"><a href="{{ route('admin.jurys.index') }}">Jurys</a></li>
     <li class="breadcrumb-item active">Ajouter</li>
 @endsection
 
@@ -15,7 +16,9 @@
             <div class="card-header">
                 <h3 class="card-title">Formulaire de création d'un jury</h3>
             </div>
-            <form action="{{ route('storejury') }}" method="POST">
+            
+            {{-- ACTION DU FORMULAIRE CORRIGÉE --}}
+            <form action="{{ route('admin.jurys.store') }}" method="POST">
                 @csrf
                 <div class="card-body">
                     <div class="form-group">
@@ -29,7 +32,8 @@
                     </div>
                 </div>
                 <div class="card-footer bg-transparent text-right">
-                    <a href="{{ route('jury') }}" class="btn btn-secondary mr-2">Annuler</a>
+                    {{-- LIEN D'ANNULATION CORRIGÉ --}}
+                    <a href="{{ route('admin.jurys.index') }}" class="btn btn-secondary mr-2">Annuler</a>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-plus-circle mr-2"></i>Créer le Jury
                     </button>

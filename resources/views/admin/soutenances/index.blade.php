@@ -11,7 +11,9 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title">Calendrier de toutes les soutenances</h3>
-        <a href="{{ route('addsoutenance') }}" class="btn btn-primary">
+        
+        {{-- LIEN CORRIGÉ --}}
+        <a href="{{ route('admin.soutenances.create') }}" class="btn btn-primary">
             <i class="fas fa-calendar-plus mr-2"></i>Planifier une soutenance
         </a>
     </div>
@@ -44,13 +46,16 @@
                             @endif
                         </td>
                         <td class="text-center">
-                            <a href="{{ route('updatesoutenance', $soutenance->id) }}" class="btn btn-sm btn-info" title="Modifier la date/note">
+                            {{-- LIEN DE MODIFICATION CORRIGÉ --}}
+                            <a href="{{ route('admin.soutenances.edit', $soutenance) }}" class="btn btn-sm btn-info" title="Modifier la date/note">
                                 <i class="fas fa-edit"></i>
                             </a>
+                            
+                            {{-- BOUTON DE SUPPRESSION CORRIGÉ --}}
                             <button class="btn btn-sm btn-danger" title="Annuler la soutenance" onclick="confirmDeletion({{ $soutenance->id }})">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
-                            <form id="delete-form-{{ $soutenance->id }}" action="{{-- route('deletesoutenance', $soutenance->id) --}}" method="POST" style="display: none;">
+                            <form id="delete-form-{{ $soutenance->id }}" action="{{ route('admin.soutenances.destroy', $soutenance) }}" method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')
                             </form>
@@ -67,9 +72,11 @@
             </tbody>
         </table>
     </div>
-    <div class="card-footer">
+    @if($soutenances->hasPages())
+    <div class="card-footer clearfix">
         {{ $soutenances->links() }}
     </div>
+    @endif
 </div>
 @endsection
 

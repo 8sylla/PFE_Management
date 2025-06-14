@@ -23,6 +23,7 @@ class AdminAuthController extends Controller
     // Gère la tentative de connexion
     public function store(Request $request)
     {
+        echo "Test";
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],

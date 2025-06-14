@@ -1,74 +1,94 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Statut de ma Fiche PFE') }}
-        </h2>
-    </x-slot>
+@extends('layouts.student')
 
-    <div class="py-12">
-        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
-            @if (session('success'))
-                <div class="mb-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded" role="alert">
-                    <p class="font-bold">Succès !</p>
-                    <p>{{ session('success') }}</p>
-                </div>
-            @endif
+@section('title', 'Statut de ma Fiche PFE')
+@section('page-title', 'Ma Fiche PFE')
 
-            @if (isset($message))
-                <div class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4 rounded" role="alert">
-                    <p>{{ $message }}</p>
-                    <a href="{{ route('fiche.create') }}" class="mt-2 inline-block bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
-                        Soumettre ma fiche maintenant
+@section('breadcrumbs')
+    <li class="breadcrumb-item active">Statut</li>
+@endsection
+
+@section('content')
+<div class="row">
+    <div class="col-12">
+        @if (isset($message))
+            {{-- Cas où aucune fiche n'a jamais été soumise --}}
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-file-alt fa-4x text-muted mb-4"></i>
+                    <h3>Vous n'avez pas encore soumis de fiche PFE.</h3>
+                    <p class="text-muted">La soumission de votre fiche est la première étape de votre projet.</p>
+                    <a href="{{ route('fiche.create') }}" class="btn btn-lg btn-success mt-3">
+                        <i class="fas fa-plus-circle mr-2"></i>
+                        Soumettre ma proposition maintenant
                     </a>
                 </div>
-            @elseif ($fiche)
-                @php
-                    $remarque = strtolower($fiche->Remarque);
-                    $bgColor = 'bg-yellow-100 border-yellow-500 text-yellow-700';
-                    $icon = 'fas fa-clock';
-                    $statusText = 'Votre fiche est en cours de validation par votre encadrant.';
+            </div>
+        @elseif ($fiche)
+            @php
+                $remarque = strtolower($fiche->Remarque);
+                $alertClass = 'warning';
+                $icon = 'fas fa-clock';
+                $statusTitle = 'En Attente';
+                $statusText = 'Votre proposition de fiche PFE est actuellement en cours de validation par votre encadrant. Vous serez notifié(e) de sa décision.';
 
-                    if ($remarque == 'accepte') {
-                        $bgColor = 'bg-green-100 border-green-500 text-green-700';
-                        $icon = 'fas fa-check-circle';
-                        $statusText = 'Félicitations ! Votre fiche a été validée avec succès.';
-                    } elseif ($remarque == 'refuse') {
-                        $bgColor = 'bg-red-100 border-red-500 text-red-700';
-                        $icon = 'fas fa-times-circle';
-                        $statusText = 'Votre fiche a été refusée. Veuillez contacter votre encadrant pour plus de détails et soumettre une nouvelle proposition.';
-                    }
-                @endphp
+                if ($remarque == 'accepte') {
+                    $alertClass = 'success';
+                    $icon = 'fas fa-check-circle';
+                    $statusTitle = 'Acceptée';
+                    $statusText = 'Félicitations ! Votre proposition de PFE a été validée. Vous pouvez maintenant télécharger la version PDF signée.';
+                } elseif ($remarque == 'refuse') {
+                    $alertClass = 'danger';
+                    $icon = 'fas fa-times-circle';
+                    $statusTitle = 'Refusée';
+                    $statusText = 'Malheureusement, votre proposition a été refusée. Veuillez consulter les remarques de votre encadrant et soumettre une nouvelle proposition.';
+                }
+            @endphp
 
-                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                    <div class="p-6 border-b border-gray-200 {{ $bgColor }}">
-                        <div class="flex items-center">
-                            <i class="{{ $icon }} fa-2x mr-4"></i>
-                            <div>
-                                <p class="font-bold text-lg">Statut : {{ ucfirst($remarque) }}</p>
-                                <p>{{ $statusText }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="p-6 text-gray-900">
-                        <h3 class="text-xl font-bold mb-4">Détails de la fiche soumise</h3>
-                        <div class="space-y-4">
-                            <div><strong class="w-48 inline-block">Intitulé du PFE:</strong> {{ $fiche->intitule_pfe }}</div>
-                            <div><strong class="w-48 inline-block">Société d'accueil:</strong> {{ $fiche->societe_acceuil }}</div>
-                            <div><strong class="w-48 inline-block">Encadrant externe:</strong> {{ $fiche->encadrant_externe }}</div>
-                             <div><strong class="w-48 inline-block">Technologies:</strong> {{ $fiche->technologies_utilisees }}</div>
-                        </div>
-
-                        @if($remarque == 'accepte')
-                            <div class="mt-6 text-right">
-                                <a href="{{ route('fiche.pdf') }}" class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700">
-                                    <i class="fas fa-download mr-2"></i> Télécharger en PDF
-                                a>
-                            </div>
-                        @endif
-                    </div>
+            <!-- Boîte d'alerte pour le statut -->
+            <div class="alert alert-{{$alertClass}} alert-dismissible">
+                <h4 class="alert-heading"><i class="icon fas {{ $icon }}"></i> Statut : {{ $statusTitle }}</h4>
+                <p>{{ $statusText }}</p>
+            </div>
+            
+            <!-- Détails de la fiche -->
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        Détails de la fiche soumise le {{ $fiche->created_at->format('d/m/Y') }}
+                    </h3>
                 </div>
-            @endif
-        </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-3">Intitulé du PFE</dt>
+                        <dd class="col-sm-9">{{ $fiche->intitule_pfe }}</dd>
+
+                        <dt class="col-sm-3">Société d'accueil</dt>
+                        <dd class="col-sm-9">{{ $fiche->societe_acceuil }}</dd>
+
+                        <dt class="col-sm-3">Encadrant externe</dt>
+                        <dd class="col-sm-9">{{ $fiche->encadrant_externe }}</dd>
+                    </dl>
+                    <hr>
+                    <strong>Description et Technologies</strong>
+                    <p class="text-muted">{{ $fiche->besions_fonctionnels }} - <small>Technologies : {{ $fiche->technologies_utilisees }}</small></p>
+
+                    @if($remarque == 'accepte')
+                        <div class="mt-4 text-right">
+                            <a href="{{ route('fiche.pdf') }}" class="btn btn-primary">
+                                <i class="fas fa-download mr-2"></i> Télécharger le PDF officiel
+                            </a>
+                        </div>
+                    @elseif($remarque == 'refuse')
+                        <div class="mt-4 text-right">
+                             <a href="{{ route('fiche.create') }}" class="btn btn-warning">
+                                <i class="fas fa-edit mr-2"></i> Soumettre une nouvelle fiche
+                            </a>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
     </div>
-</x-app-layout>
+</div>
+@endsection

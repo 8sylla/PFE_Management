@@ -11,7 +11,9 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title">Tous les jurys disponibles</h3>
-        <a href="{{ route('addjury') }}" class="btn btn-primary">
+        
+        {{-- LIEN CORRIGÉ --}}
+        <a href="{{ route('admin.jurys.create') }}" class="btn btn-primary">
             <i class="fas fa-plus mr-2"></i>Ajouter un Jury
         </a>
     </div>
@@ -20,7 +22,9 @@
             <div class="text-center text-muted py-5">
                 <i class="fas fa-users-slash fa-3x mb-3"></i>
                 <p>Aucun jury n'a été créé pour le moment.</p>
-                <a href="{{ route('addjury') }}" class="btn btn-primary mt-2">Créer le premier jury</a>
+                
+                {{-- LIEN CORRIGÉ --}}
+                <a href="{{ route('admin.jurys.create') }}" class="btn btn-primary mt-2">Créer le premier jury</a>
             </div>
         @else
             <div class="row">
@@ -34,10 +38,11 @@
                             <h3 class="profile-username text-center mt-3">{{ $jury->name }}</h3>
                             <p class="text-muted text-center">ID: {{ $jury->id }}</p>
                             
+                            {{-- BOUTON DE SUPPRESSION CORRIGÉ --}}
                             <button class="btn btn-danger btn-block" onclick="confirmDeletion({{ $jury->id }})">
                                 <b><i class="fas fa-trash mr-1"></i> Supprimer</b>
                             </button>
-                            <form id="delete-form-{{ $jury->id }}" action="{{ route('deletejury', $jury->id) }}" method="POST" style="display: none;">
+                            <form id="delete-form-{{ $jury->id }}" action="{{ route('admin.jurys.destroy', $jury) }}" method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')
                             </form>
@@ -48,11 +53,11 @@
             </div>
         @endif
     </div>
-    <div class="card-footer">
-        {{-- Pagination
+    @if($data->hasPages())
+    <div class="card-footer clearfix">
         {{ $data->links() }}
-        --}}
     </div>
+    @endif
 </div>
 @endsection
 

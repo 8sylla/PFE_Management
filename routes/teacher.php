@@ -5,6 +5,7 @@ use App\Http\Controllers\Teacher\TeacherAuthController;
 use App\Http\Controllers\Teacher\TeacherDashboardController;
 use App\Http\Controllers\Teacher\FicheValidationController;
 use App\Http\Controllers\Teacher\SoutenanceTeacherController;
+use App\Http\Controllers\Teacher\ProfileController;
 
 // Préfixe 'teacher', nom de route 'teacher.'
 Route::prefix('teacher')->name('teacher.')->group(function () {
@@ -29,5 +30,10 @@ Route::prefix('teacher')->name('teacher.')->group(function () {
 
         // Consultation des soutenances
         Route::get('soutenances', [SoutenanceTeacherController::class, 'index'])->name('soutenances.index');
+
+        // Profile
+        Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::put('password', [ProfileController::class, 'updatePassword'])->name('password.update');
     });
 });

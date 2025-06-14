@@ -11,11 +11,13 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title">Tous les encadrants enregistrés</h3>
-        <a href="{{ route('admin.formaddenseignant') }}" class="btn btn-primary">
+        
+        {{-- LIGNE CORRIGÉE --}}
+        <a href="{{ route('admin.enseignants.create') }}" class="btn btn-primary">
             <i class="fas fa-plus mr-2"></i>Ajouter un encadrant
         </a>
     </div>
-    <div class="card-body">
+    <div class="card-body p-0"> {{-- p-0 pour que la table prenne toute la largeur --}}
         <table class="table table-bordered table-striped table-hover">
             <thead class="thead-dark">
                 <tr>
@@ -34,29 +36,35 @@
                         <td><a href="mailto:{{ $enseignant->email }}">{{ $enseignant->email }}</a></td>
                         <td>{{ $enseignant->specialite ?? 'Non spécifiée' }}</td>
                         <td class="text-center">
-                            <a href="{{ route('updateform', $enseignant->id) }}" class="btn btn-sm btn-info" title="Modifier">
+                            {{-- LIEN DE MODIFICATION CORRIGÉ --}}
+                            <a href="{{ route('admin.enseignants.edit', $enseignant) }}" class="btn btn-sm btn-info" title="Modifier">
                                 <i class="fas fa-edit"></i>
                             </a>
+                            
+                            {{-- BOUTON DE SUPPRESSION CORRIGÉ --}}
                             <button class="btn btn-sm btn-danger" title="Supprimer" onclick="confirmDeletion({{ $enseignant->id }})">
                                 <i class="fas fa-trash"></i>
                             </button>
-                            <form id="delete-form-{{ $enseignant->id }}" action="{{ route('deleteens', $enseignant->id) }}" method="POST" style="display: none;">
+                            <form id="delete-form-{{ $enseignant->id }}" action="{{ route('admin.enseignants.destroy', $enseignant) }}" method="POST" style="display: none;">
                                 @csrf
-                                @method('DELETE') <!-- Important pour la suppression -->
+                                @method('DELETE')
                             </form>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="5" class="text-center text-muted">Aucun encadrant trouvé.</td>
+                        <td colspan="5" class="text-center text-muted py-4">Aucun encadrant trouvé.</td>
                     </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-    <div class="card-footer">
-        {{-- Pour la pagination future : {{ $data->links() }} --}}
+    @if($data->hasPages())
+    <div class="card-footer clearfix">
+        {{-- Affichage de la pagination --}}
+        {{ $data->links() }}
     </div>
+    @endif
 </div>
 @endsection
 

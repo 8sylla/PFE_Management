@@ -7,16 +7,22 @@
                 
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8  sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('fiche')" :active="request()->routeIs('fiche')">
-                        fiches
-                    </x-nav-link>
-                    
-                </div>
-            </div>
+                <!-- C'est le NOUVEAU code corrigé -->
+<div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+        {{ __('Tableau de Bord') }}
+    </x-nav-link>
+    
+    {{-- Le lien pointe maintenant vers la route pour AFFICHER la fiche --}}
+    <x-nav-link :href="route('fiche.show')" :active="request()->routeIs('fiche.*')">
+        {{ __('Ma Fiche PFE') }}
+    </x-nav-link>
+    
+    {{-- On ajoute un lien vers la page de soutenance de l'étudiant --}}
+    <x-nav-link :href="route('soutenance.student.show')" :active="request()->routeIs('soutenance.student.show')">
+        {{ __('Ma Soutenance') }}
+    </x-nav-link>
+</div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">

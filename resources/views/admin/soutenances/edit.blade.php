@@ -4,7 +4,8 @@
 @section('page-title', 'Mise à jour de la Soutenance')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('showsoutenance') }}">Soutenances</a></li>
+    {{-- LIEN CORRIGÉ DANS LE FIL D'ARIANE --}}
+    <li class="breadcrumb-item"><a href="{{ route('admin.soutenances.index') }}">Soutenances</a></li>
     <li class="breadcrumb-item active">Modifier</li>
 @endsection
 
@@ -17,7 +18,9 @@
                     Modification de la soutenance de <span class="font-weight-bold">{{ $data->etudiant->name ?? 'N/A' }}</span>
                 </h3>
             </div>
-            <form action="{{ route('updatesoutenance', $data->id) }}" method="POST">
+            
+            {{-- ACTION DU FORMULAIRE CORRIGÉE --}}
+            <form action="{{ route('admin.soutenances.update', $data) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -81,7 +84,8 @@
                 </div>
 
                 <div class="card-footer bg-transparent text-right">
-                    <a href="{{ route('showsoutenance') }}" class="btn btn-secondary mr-2">Annuler</a>
+                    {{-- LIEN D'ANNULATION CORRIGÉ --}}
+                    <a href="{{ route('admin.soutenances.index') }}" class="btn btn-secondary mr-2">Annuler</a>
                     <button type="submit" class="btn btn-primary"><i class="fas fa-save mr-2"></i>Mettre à jour la soutenance</button>
                 </div>
             </form>

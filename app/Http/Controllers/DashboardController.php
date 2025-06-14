@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+
 class DashboardController extends Controller
 {
     public function studentDashboard()
@@ -17,6 +19,6 @@ class DashboardController extends Controller
 
         // Le nom de la vue originale était 'layouts.palnnig', je vais le garder pour l'instant.
         // Il serait bon de le renommer en 'student.dashboard' pour plus de clarté.
-        return view('layouts.palnnig', compact('fiche', 'soutenance'));
+        return view('student.dashboard', compact('fiche', 'soutenance'));
     }
 }

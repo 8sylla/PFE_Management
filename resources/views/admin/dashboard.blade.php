@@ -27,7 +27,7 @@
                 <p>Encadrants Actifs</p>
             </div>
             <div class="icon"><i class="fas fa-chalkboard-teacher"></i></div>
-            <a href="{{ route('admin.ens') }}" class="small-box-footer">Gérer <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{{ route('admin.enseignants.index') }}" class="small-box-footer">Gérer <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <div class="col-lg-3 col-6">
@@ -37,7 +37,7 @@
                 <p>Soutenances Planifiées</p>
             </div>
             <div class="icon"><i class="fas fa-calendar-alt"></i></div>
-            <a href="{{ route('showsoutenance') }}" class="small-box-footer">Voir le planning <i class="fas fa-arrow-circle-right"></i></a>
+            <a href="{{ route('admin.soutenances.index') }}" class="small-box-footer">Voir le planning <i class="fas fa-arrow-circle-right"></i></a>
         </div>
     </div>
     <div class="col-lg-3 col-6">
@@ -60,36 +60,59 @@
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-rocket mr-2"></i>Actions Rapides</h3>
             </div>
-            <div class="card-body">
-                <a href="{{ route('admin.formaddenseignant') }}" class="btn btn-app bg-primary"><i class="fas fa-user-plus"></i>Ajouter Encadrant</a>
-                <a href="{{ route('addsoutenance') }}" class="btn btn-app bg-warning"><i class="fas fa-calendar-plus"></i>Planifier Soutenance</a>
-                <a href="{{ route('addjury') }}" class="btn btn-app bg-info"><i class="fas fa-users-cog"></i>Créer Jury</a>
-                <a href="{{ route('addsalle') }}" class="btn btn-app bg-secondary"><i class="fas fa-door-open"></i>Ajouter Salle</a>
-            </div>
+            <!-- C'est le NOUVEAU code corrigé -->
+    <div class="card-body">
+        <a href="{{ route('admin.enseignants.create') }}" class="btn btn-app bg-primary">
+            <i class="fas fa-user-plus"></i>Ajouter Encadrant
+        </a>
+        <a href="{{ route('admin.soutenances.create') }}" class="btn btn-app bg-warning">
+            <i class="fas fa-calendar-plus"></i>Planifier Soutenance
+        </a>
+        <a href="{{ route('admin.jurys.create') }}" class="btn btn-app bg-info">
+            <i class="fas fa-users-cog"></i>Créer Jury
+        </a>
+        <a href="{{ route('admin.salles.create') }}" class="btn btn-app bg-secondary">
+            <i class="fas fa-door-open"></i>Ajouter Salle
+        </a>
+    </div>
         </div>
     </div>
 
     <!-- Dernières Inscriptions (Exemple) -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header">
-                <h3 class="card-title"><i class="fas fa-history mr-2"></i>Derniers Étudiants Inscrits</h3>
-            </div>
-            <div class="card-body p-0">
+    <!-- Dernières Inscriptions (Exemple) -->
+<div class="col-md-6">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><i class="fas fa-history mr-2"></i>Derniers Étudiants Inscrits</h3>
+        </div>
+        <div class="card-body p-0">
+            @if($recentStudents->isNotEmpty())
                 <ul class="products-list product-list-in-card pl-2 pr-2">
-                    {{-- @foreach($recentStudents as $student)
+                    {{-- La boucle est maintenant HORS des commentaires --}}
+                    @foreach($recentStudents as $student)
                     <li class="item">
-                        <div class="product-img"><img src="{{ asset('images_profil/default.png') }}" alt="Image" class="img-size-50"></div>
+                        <div class="product-img">
+                            {{-- Utiliser l'image de l'étudiant s'il en a une, sinon une image par défaut --}}
+                            <img src="{{ $student->image ? asset('images_profil/' . $student->image) : asset('images_profil/default.png') }}" alt="Image" class="img-size-50 rounded-circle">
+                        </div>
                         <div class="product-info">
                             <a href="#" class="product-title">{{ $student->name }}</a>
-                            <span class="product-description">{{ $student->email }} - Inscrit le {{ $student->created_at->format('d/m/Y') }}</span>
+                            <span class="product-description">
+                                {{ $student->email }} - Inscrit le {{ $student->created_at->format('d/m/Y') }}
+                            </span>
                         </div>
                     </li>
-                    @endforeach --}}
+                    @endforeach
                 </ul>
-            </div>
-             <div class="card-footer text-center"><a href="#">Voir tous les étudiants</a></div>
+            @else
+                <p class="text-center text-muted p-4">Aucun étudiant n'est encore inscrit.</p>
+            @endif
         </div>
+         <div class="card-footer text-center">
+             {{-- Remplacez '#' par la future route pour voir tous les étudiants --}}
+             <a href="#">Voir tous les étudiants</a>
+         </div>
     </div>
+</div>
 </div>
 @endsection

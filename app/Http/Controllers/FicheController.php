@@ -9,15 +9,24 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class FicheController extends Controller
 {
+    // public function show()
+    // {
+    //     $etudiant = Auth::user();
+    //     $fiche = $etudiant->fiches()->latest()->first();
+
+    //     if (!$fiche) {
+    //         return view('student.fiche.show')->with('message', 'Vous n\'avez pas encore soumis de fiche PFE.');
+    //     }
+
+    //     return view('student.fiche.show', compact('fiche'));
+    // }
+
     public function show()
     {
-        $etudiant = Auth::user();
-        $fiche = $etudiant->fiches()->latest()->first();
-
+        $fiche = Auth::user()->latestFiche;
         if (!$fiche) {
-            return view('student.fiche.show')->with('message', 'Vous n\'avez pas encore soumis de fiche PFE.');
+            return view('student.fiche.show')->with('message', 'Vous n\'avez pas encore soumis de fiche.');
         }
-
         return view('student.fiche.show', compact('fiche'));
     }
 
@@ -31,20 +40,22 @@ class FicheController extends Controller
 
     public function store(Request $request)
     {
+        
         $validatedData = $request->validate([
-            'enseignant_id' => 'required|exists:enseignants,id',
-            'societe_acceuil' => 'required|string|max:255',
-            'encadrant_externe' => 'required|string|max:255',
-            'ntel_societe' => 'required|string|max:20',
-            'mail_societe' => 'required|email|max:255',
-            'intitule_pfe' => 'required|string|max:255',
-            'besions_fonctionnels' => 'required|string',
-            'technologies_utilisees' => 'required|string',
-            'langue' => 'required|string|in:Francais,Anglais',
+        'societe_acceuil' => 'required|string|max:255',
+        'encadrant_externe' => 'required|string|max:255',
+        'ntel_societe' => 'required|string|max:20',
+        'mail_societe' => 'required|email|max:255',
+        'intitule_pfe' => 'required|string|max:255',
+        'besions_fonctionnels' => 'required|string',
+        'technologies_utilisees' => 'required|string',
+        'langue' => 'required|string|in:Francais,Anglais',
         ]);
         
-        // Ajouter l'ID de l'étudiant authentifié
-        $validatedData['etudiant_id'] = Auth::id();
+        // On ajoute les IDs de l'étudiant et de son encadrant ici, côté serveur
+        $user = Auth::user();
+        $validatedData['etudiant_id'] = $user->id;
+        $validatedData['enseignant_id'] = $user->enseignant_id; // Assurez-vous que l'étudiant a un enseignant_id
 
         Fiche::create($validatedData);
 

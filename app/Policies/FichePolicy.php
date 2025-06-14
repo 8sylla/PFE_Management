@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\Fiche;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use App\Models\Enseignant;
 
 class FichePolicy
 {
@@ -16,4 +17,5 @@ class FichePolicy
     {
         return $enseignant->id === $fiche->etudiant->enseignant_id;
     }
+    
 }

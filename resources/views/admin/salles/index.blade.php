@@ -11,7 +11,9 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title">Toutes les salles de soutenance</h3>
-        <a href="{{ route('addsalle') }}" class="btn btn-primary">
+        
+        {{-- LIEN CORRIGÉ --}}
+        <a href="{{ route('admin.salles.create') }}" class="btn btn-primary">
             <i class="fas fa-plus mr-2"></i>Ajouter une Salle
         </a>
     </div>
@@ -33,10 +35,12 @@
                         <td>{{ $salle->depatement }}</td>
                         <td class="text-center">
                             {{-- <a href="#" class="btn btn-sm btn-info" title="Modifier"><i class="fas fa-edit"></i></a> --}}
+                            
+                            {{-- BOUTON DE SUPPRESSION CORRIGÉ --}}
                             <button class="btn btn-sm btn-danger" title="Supprimer" onclick="confirmDeletion({{ $salle->id }})">
                                 <i class="fas fa-trash"></i>
                             </button>
-                            <form id="delete-form-{{ $salle->id }}" action="{{-- route('deletesalle', $salle->id) --}}" method="POST" style="display: none;">
+                            <form id="delete-form-{{ $salle->id }}" action="{{ route('admin.salles.destroy', $salle) }}" method="POST" style="display: none;">
                                 @csrf
                                 @method('DELETE')
                             </form>
@@ -50,6 +54,11 @@
             </tbody>
         </table>
     </div>
+    @if($data->hasPages())
+    <div class="card-footer clearfix">
+        {{ $data->links() }}
+    </div>
+    @endif
 </div>
 @endsection
 

@@ -7,8 +7,9 @@ use App\Http\Controllers\Admin\EnseignantController;
 use App\Http\Controllers\Admin\JuryController;
 use App\Http\Controllers\Admin\SalleController;
 use App\Http\Controllers\Admin\SoutenanceAdminController;
+use App\Http\Controllers\Admin\ProfileController;
 
-// Préfixe 'admin', nom de route 'admin.'
+// Préfixe 'admin', nom de route 'admin.' 
 Route::prefix('admin')->name('admin.')->group(function () {
     
     // Routes d'authentification de l'admin (accessibles aux invités)
@@ -40,5 +41,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('soutenances/{soutenance}/modifier', [SoutenanceAdminController::class, 'edit'])->name('soutenances.edit');
         Route::put('soutenances/{soutenance}', [SoutenanceAdminController::class, 'update'])->name('soutenances.update');
         Route::delete('soutenances/{soutenance}', [SoutenanceAdminController::class, 'destroy'])->name('soutenances.destroy');
+
+        // Profile
+
+        Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::put('password', [ProfileController::class, 'updatePassword'])->name('password.update');
     });
 });

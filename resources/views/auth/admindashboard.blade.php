@@ -77,7 +77,7 @@
                     <i class="far fa-user-circle"></i> {{ Auth::guard('admin')->user()->name }}
                 </a>
                 <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right">
-                    <a href="#" class="dropdown-item">
+                    <a href="{{ route('admin.profile.edit') }}" class="dropdown-item">
                         <i class="fas fa-user-cog mr-2"></i> Mon Profil
                     </a>
                     <div class="dropdown-divider"></div>
@@ -96,37 +96,38 @@
             <span class="brand-text font-weight-light">PFE Admin Panel</span>
         </a>
         <div class="sidebar">
-            <nav class="mt-2">
-                <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <li class="nav-item">
-                        <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-tachometer-alt"></i><p>Tableau de bord</p>
-                        </a>
-                    </li>
-                    <li class="nav-header">GESTION PRINCIPALE</li>
-                    <li class="nav-item">
-                        <a href="{{ route('admin.ens') }}" class="nav-link {{ request()->routeIs('admin.ens*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-chalkboard-teacher"></i><p>Encadrants</p>
-                        </a>
-                    </li>
-                     <li class="nav-item">
-                        <a href="{{ route('showsoutenance') }}" class="nav-link {{ request()->routeIs('showsoutenance*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-graduation-cap"></i><p>Soutenances</p>
-                        </a>
-                    </li>
-                    <li class="nav-header">CONFIGURATION</li>
-                    <li class="nav-item">
-                        <a href="{{ route('jury') }}" class="nav-link {{ request()->routeIs('jury*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-users-cog"></i><p>Jurys</p>
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{{-- Remplacer par la route des salles --}}" class="nav-link">
-                            <i class="nav-icon fas fa-door-open"></i><p>Salles</p>
-                        </a>
-                    </li>
-                </ul>
-            </nav>
+            <!-- C'est le NOUVEAU code corrigé -->
+<nav class="mt-2">
+    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <li class="nav-item">
+            <a href="{{ route('admin.dashboard') }}" class="nav-link {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-tachometer-alt"></i><p>Tableau de bord</p>
+            </a>
+        </li>
+        <li class="nav-header">GESTION PRINCIPALE</li>
+        <li class="nav-item">
+            <a href="{{ route('admin.enseignants.index') }}" class="nav-link {{ request()->routeIs('admin.enseignants.*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-chalkboard-teacher"></i><p>Encadrants</p>
+            </a>
+        </li>
+         <li class="nav-item">
+            <a href="{{ route('admin.soutenances.index') }}" class="nav-link {{ request()->routeIs('admin.soutenances.*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-graduation-cap"></i><p>Soutenances</p>
+            </a>
+        </li>
+        <li class="nav-header">CONFIGURATION</li>
+        <li class="nav-item">
+            <a href="{{ route('admin.jurys.index') }}" class="nav-link {{ request()->routeIs('admin.jurys.*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-users-cog"></i><p>Jurys</p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('admin.salles.index') }}" class="nav-link {{ request()->routeIs('admin.salles.*') ? 'active' : '' }}">
+                <i class="nav-icon fas fa-door-open"></i><p>Salles</p>
+            </a>
+        </li>
+    </ul>
+</nav>
         </div>
     </aside>
 

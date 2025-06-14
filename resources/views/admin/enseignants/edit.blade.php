@@ -4,7 +4,8 @@
 @section('page-title', 'Modification de l\'Encadrant')
 
 @section('breadcrumbs')
-    <li class="breadcrumb-item"><a href="{{ route('admin.ens') }}">Encadrants</a></li>
+    {{-- LIEN CORRIGÉ DANS LE FIL D'ARIANE --}}
+    <li class="breadcrumb-item"><a href="{{ route('admin.enseignants.index') }}">Encadrants</a></li>
     <li class="breadcrumb-item active">Modifier : {{ $data->name }}</li>
 @endsection
 
@@ -15,9 +16,11 @@
             <div class="card-header">
                 <h3 class="card-title">Mise à jour des informations de : <strong>{{ $data->name }}</strong></h3>
             </div>
-            <form action="{{ route('updateens', $data->id) }}" method="POST">
+            
+            {{-- ACTION DU FORMULAIRE CORRIGÉE --}}
+            <form action="{{ route('admin.enseignants.update', $data) }}" method="POST">
                 @csrf
-                @method('PUT') {{-- Ou PATCH, selon votre route --}}
+                @method('PUT') {{-- La méthode PUT est standard pour la mise à jour complète d'une ressource --}}
                 
                 <div class="card-body">
                     <div class="form-group mb-3">
@@ -48,19 +51,33 @@
                     </div>
 
                     <hr>
-                    <p class="text-muted">Laissez le champ mot de passe vide si vous ne souhaitez pas le modifier.</p>
-                    <div class="form-group mb-4">
-                        <label for="password">Nouveau mot de passe (optionnel)</label>
-                        <div class="input-group">
-                             <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                            <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                    <p class="text-muted">Laissez les champs de mot de passe vides si vous ne souhaitez pas le modifier.</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group mb-4">
+                                <label for="password">Nouveau mot de passe (optionnel)</label>
+                                <div class="input-group">
+                                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password">
+                                </div>
+                                @error('password')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                            </div>
                         </div>
-                        @error('password')<div class="text-danger mt-1">{{ $message }}</div>@enderror
+                        <div class="col-md-6">
+                             <div class="form-group mb-4">
+                                <label for="password_confirmation">Confirmer le mot de passe</label>
+                                <div class="input-group">
+                                     <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation">
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="card-footer bg-transparent text-right">
-                    <a href="{{ route('admin.ens') }}" class="btn btn-secondary mr-2">Annuler</a>
+                    {{-- LIEN D'ANNULATION CORRIGÉ --}}
+                    <a href="{{ route('admin.enseignants.index') }}" class="btn btn-secondary mr-2">Annuler</a>
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save mr-2"></i>Enregistrer les modifications
                     </button>
