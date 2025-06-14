@@ -17,6 +17,7 @@ class Soutenance extends Model
         'enseignant_id',
         'salle_id',
         'jury_id',
+        'note', 
 
     ];
     public function sale()

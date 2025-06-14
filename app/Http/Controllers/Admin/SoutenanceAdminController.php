@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 
 class SoutenanceAdminController extends Controller
 {
-    // Affiche la liste des soutenances
+    /**
+     * Affiche la liste paginée de toutes les soutenances.
+     */
     public function index()
     {
         $soutenances = Soutenance::with(['etudiant', 'enseignant', 'jury', 'sale'])
@@ -20,26 +22,30 @@ class SoutenanceAdminController extends Controller
         return view('admin.soutenances.index', compact('soutenances'));
     }
 
-    // Affiche le formulaire de planification
+    /**
+     * Affiche le formulaire pour planifier une nouvelle soutenance.
+     */
     public function create(Request $request)
     {
-        // Étudiants qui n'ont pas encore de soutenance
-        $etudiants = User::doesntHave('soutenance')->get();
+        // On ne propose que les étudiants qui n'ont pas encore de soutenance planifiée.
+        $etudiants = User::doesntHave('soutenance')->orderBy('name')->get();
         
-        $jurys = Jury::all();
-        $salles = Sale::all();
+        $jurys = Jury::orderBy('name')->get();
+        $salles = Sale::orderBy('numero')->get();
         $selectedStudent = null;
         $encadrent = null;
 
         if ($request->filled('etudiant_id')) {
-            $selectedStudent = User::findOrFail($request->etudiant_id);
+            $selectedStudent = User::with('enseignant')->findOrFail($request->etudiant_id);
             $encadrent = $selectedStudent->enseignant;
         }
 
         return view('admin.soutenances.create', compact('etudiants', 'jurys', 'salles', 'selectedStudent', 'encadrent'));
     }
 
-    // Enregistre la nouvelle soutenance
+    /**
+     * Enregistre une nouvelle soutenance dans la base de données.
+     */
     public function store(Request $request)
     {
         $request->validate([
@@ -54,7 +60,7 @@ class SoutenanceAdminController extends Controller
         Soutenance::create([
             'date' => $request->date,
             'etudiant_id' => $request->etudiant_id,
-            'enseignant_id' => $etudiant->enseignant_id, // L'encadrant est lié à l'étudiant
+            'enseignant_id' => $etudiant->enseignant_id,
             'salle_id' => $request->salle_id,
             'jury_id' => $request->jury_id,
         ]);
@@ -62,30 +68,38 @@ class SoutenanceAdminController extends Controller
         return redirect()->route('admin.soutenances.index')->with('success', 'Soutenance planifiée avec succès.');
     }
     
-    // Affiche le formulaire de modification
+    /**
+     * Affiche le formulaire pour modifier et noter une soutenance.
+     */
     public function edit(Soutenance $soutenance)
     {
         $jurys = Jury::all();
         $salles = Sale::all();
+        // Le modèle $soutenance est automatiquement injecté par Laravel (Route Model Binding)
         return view('admin.soutenances.edit', ['data' => $soutenance, 'jurys' => $jurys, 'salles' => $salles]);
     }
     
-    // Met à jour une soutenance
+    /**
+     * Met à jour les informations d'une soutenance, y compris la note.
+     */
     public function update(Request $request, Soutenance $soutenance)
     {
-        $request->validate([
+        
+        $validated = $request->validate([
             'date' => ['required', 'date'],
             'salle_id' => ['required', 'exists:sales,id'],
             'jury_id' => ['required', 'exists:juries,id'],
-            'note' => ['nullable', 'numeric', 'min:0', 'max:20'],
+            'note' => ['nullable', 'numeric', 'min:0', 'max:20'], // La note est optionnelle
         ]);
 
-        $soutenance->update($request->all());
+        $soutenance->update($validated);
 
         return redirect()->route('admin.soutenances.index')->with('success', 'Soutenance mise à jour avec succès.');
     }
     
-    // Supprime une soutenance
+    /**
+     * Supprime une soutenance planifiée.
+     */
     public function destroy(Soutenance $soutenance)
     {
         $soutenance->delete();

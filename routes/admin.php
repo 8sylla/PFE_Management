@@ -8,6 +8,8 @@ use App\Http\Controllers\Admin\JuryController;
 use App\Http\Controllers\Admin\SalleController;
 use App\Http\Controllers\Admin\SoutenanceAdminController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\UserController; 
+use App\Http\Controllers\Admin\FicheAdminController;
 
 // Préfixe 'admin', nom de route 'admin.' 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -47,5 +49,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('profile', [ProfileController::class, 'update'])->name('profile.update');
         Route::put('password', [ProfileController::class, 'updatePassword'])->name('password.update');
+
+        // Gestion des Étudiants
+    Route::get('etudiants', [UserController::class, 'index'])->name('users.index');
+    Route::get('etudiants/{user}', [UserController::class, 'show'])->name('users.show');
+    
+    // Gestion des Fiches PFE
+    Route::get('fiches', [FicheAdminController::class, 'index'])->name('fiches.index');
     });
 });

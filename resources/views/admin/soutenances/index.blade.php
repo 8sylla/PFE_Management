@@ -11,15 +11,13 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h3 class="card-title">Calendrier de toutes les soutenances</h3>
-        
-        {{-- LIEN CORRIGÉ --}}
         <a href="{{ route('admin.soutenances.create') }}" class="btn btn-primary">
             <i class="fas fa-calendar-plus mr-2"></i>Planifier une soutenance
         </a>
     </div>
     <div class="card-body p-0">
         <table class="table table-hover table-striped">
-            <thead class="thead-dark">
+            <thead class="thead-light">
                 <tr>
                     <th>Date & Heure</th>
                     <th>Étudiant</th>
@@ -40,18 +38,15 @@
                         <td>{{ $soutenance->sale->numero ?? 'N/A' }}</td>
                         <td class="text-center">
                             @if($soutenance->note)
-                                <span class="badge badge-success">{{ $soutenance->note }} / 20</span>
+                                <span class="badge badge-success font-weight-bold" style="font-size: 0.9em;">{{ $soutenance->note }} / 20</span>
                             @else
                                 <span class="badge badge-secondary">Non noté</span>
                             @endif
                         </td>
                         <td class="text-center">
-                            {{-- LIEN DE MODIFICATION CORRIGÉ --}}
-                            <a href="{{ route('admin.soutenances.edit', $soutenance) }}" class="btn btn-sm btn-info" title="Modifier la date/note">
-                                <i class="fas fa-edit"></i>
+                            <a href="{{ route('admin.soutenances.edit', $soutenance) }}" class="btn btn-sm btn-info" title="Noter / Modifier">
+                                <i class="fas fa-edit"></i> Noter
                             </a>
-                            
-                            {{-- BOUTON DE SUPPRESSION CORRIGÉ --}}
                             <button class="btn btn-sm btn-danger" title="Annuler la soutenance" onclick="confirmDeletion({{ $soutenance->id }})">
                                 <i class="fas fa-trash-alt"></i>
                             </button>

@@ -18,6 +18,7 @@ class Enseignant extends Authenticatable
         'name',
         'email',
         'password',
+        'specialite',
     ];
     protected $casts = [
         'email_verified_at' => 'datetime',

@@ -92,17 +92,166 @@
 <!-- Timeline de progression du projet -->
 <div class="row mt-4">
     <div class="col-12">
-        <div class="card">
+        <div class="card card-primary card-outline">
             <div class="card-header">
                 <h3 class="card-title"><i class="fas fa-project-diagram mr-2"></i>Ma Progression PFE</h3>
             </div>
             <div class="card-body">
-                {{-- Ici, on insère la timeline que nous avions créée précédemment --}}
-                <ol class="relative border-l border-gray-200" style="list-style: none; padding-left: 0;">                  
-                    {{-- ... Code complet de la timeline ... --}}
-                </ol>
+                <div class="timeline">
+                    <!-- Étape 1 : Inscription (Toujours terminée) -->
+                    <div>
+                        <i class="fas fa-user-check bg-purple"></i>
+                        <div class="timeline-item">
+                            <span class="time"><i class="fas fa-check"></i> Terminé</span>
+                            <h3 class="timeline-header text-purple font-weight-bold">Inscription à la Plateforme</h3>
+                            <div class="timeline-body">
+                                Bienvenue ! Votre parcours pour le PFE commence ici.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Étape 2 : Soumission de la Fiche PFE -->
+                    <div>
+                        @if($fiche)
+                            {{-- L'étudiant a soumis une fiche --}}
+                            @php
+                                $remarque = strtolower($fiche->Remarque);
+                                if ($remarque == 'accepte') {
+                                    $iconClass = 'fas fa-check-circle bg-success';
+                                    $headerClass = 'text-success';
+                                    $statusText = 'Fiche Acceptée';
+                                } elseif ($remarque == 'refuse') {
+                                    $iconClass = 'fas fa-times-circle bg-danger';
+                                    $headerClass = 'text-danger';
+                                    $statusText = 'Fiche Refusée';
+                                } else {
+                                    $iconClass = 'fas fa-hourglass-half bg-warning';
+                                    $headerClass = 'text-warning';
+                                    $statusText = 'Fiche en Attente';
+                                }
+                            @endphp
+                            <i class="{{ $iconClass }}"></i>
+                            <div class="timeline-item">
+                                <span class="time"><i class="fas fa-clock"></i> Soumis le {{ $fiche->created_at->format('d/m/Y') }}</span>
+                                <h3 class="timeline-header {{ $headerClass }} font-weight-bold">Proposition de la Fiche PFE</h3>
+                                <div class="timeline-body">
+                                    Votre proposition de projet est actuellement : <strong>{{ $statusText }}</strong>.
+                                </div>
+                                <div class="timeline-footer">
+                                    <a href="{{ route('fiche.show') }}" class="btn btn-primary btn-sm">Voir les détails</a>
+                                </div>
+                            </div>
+                        @else
+                            {{-- L'étudiant n'a pas encore soumis de fiche --}}
+                            <i class="fas fa-file-alt bg-gray"></i>
+                            <div class="timeline-item">
+                                <h3 class="timeline-header font-weight-bold text-danger">Action Requise : Proposition de la Fiche PFE</h3>
+                                <div class="timeline-body">
+                                    La soumission de votre fiche est la prochaine étape cruciale. Veuillez la remplir dès que possible.
+                                </div>
+                                <div class="timeline-footer">
+                                    <a href="{{ route('fiche.create') }}" class="btn btn-success btn-sm">Remplir ma fiche</a>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Étape 3 : Dépôt des Documents -->
+                    <div>
+                        <i class="fas fa-folder-open bg-gray"></i>
+                        <div class="timeline-item">
+                            <h3 class="timeline-header font-weight-bold">Dépôt des Documents</h3>
+                            <div class="timeline-body">
+                                Vous pourrez déposer ici les différentes versions de votre rapport et de votre présentation tout au long du projet.
+                            </div>
+                            <div class="timeline-footer">
+                                <a href="{{ route('documents.index') }}" class="btn btn-primary btn-sm">Gérer mes documents</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Étape 4 : Planification de la Soutenance -->
+                    <div>
+                        @if ($soutenance)
+                            <i class="fas fa-calendar-check bg-success"></i>
+                            <div class="timeline-item">
+                                <h3 class="timeline-header font-weight-bold text-success">Soutenance Planifiée</h3>
+                                <div class="timeline-body">
+                                    Votre soutenance est prévue pour le <strong>{{ \Carbon\Carbon::parse($soutenance->date)->format('d F Y à H:i') }}</strong>.
+                                </div>
+                                <div class="timeline-footer">
+                                    <a href="{{ route('soutenance.student.show') }}" class="btn btn-primary btn-sm">Voir les détails</a>
+                                </div>
+                            </div>
+                        @else
+                            <i class="fas fa-calendar-alt bg-gray"></i>
+                            <div class="timeline-item">
+                                <h3 class="timeline-header font-weight-bold">Planification de la Soutenance</h3>
+                                <div class="timeline-body">
+                                    L'administration planifiera votre soutenance une fois votre projet suffisamment avancé et votre fiche validée.
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Fin de la Timeline -->
+                    <div>
+                        @if($isCompleted)
+                            {{-- Si le processus est terminé (note attribuée) --}}
+                            <i class="fas fa-trophy bg-success"></i>
+                             <div class="timeline-item">
+                                <h3 class="timeline-header font-weight-bold text-success">Projet Terminé et Validé</h3>
+                                <div class="timeline-body">
+                                    Félicitations pour avoir mené votre projet à son terme ! Votre note finale est enregistrée.
+                                </div>
+                            </div>
+                        @else
+                             {{-- Si le processus n'est pas encore terminé --}}
+                            <i class="fas fa-trophy bg-gray"></i>
+                        @endif
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
+
+<!-- Colonne Latérale: Infos & Aide -->
+    <div class="lg:col-span-1 space-y-8">
+        
+        {{-- NOUVELLE CARTE DE L'ENCADRANT --}}
+        <div class="card card-primary card-outline">
+            <div class="card-body box-profile">
+                <div class="text-center">
+                    {{-- Photo de l'enseignant --}}
+                    <img class="profile-user-img img-fluid img-circle"
+                         src="{{ asset('dist/img/user2-160x160.jpg') }}" {{-- Mettre une image par défaut pour l'enseignant --}}
+                         alt="Photo de l'encadrant">
+                </div>
+
+                <h3 class="profile-username text-center">
+                    {{ $user->enseignant->name ?? 'Non assigné' }}
+                </h3>
+
+                <p class="text-muted text-center">
+                    {{ $user->enseignant->specialite ?? 'Encadrant Pédagogique' }}
+                </p>
+
+                <ul class="list-group list-group-unbordered mb-3">
+                    <li class="list-group-item">
+                        <b>Email</b> 
+                        <a href="mailto:{{ $user->enseignant->email ?? '' }}" class="float-right">
+                            {{ $user->enseignant->email ?? 'N/A' }}
+                        </a>
+                    </li>
+                </ul>
+
+                <a href="mailto:{{ $user->enseignant->email ?? '' }}" class="btn btn-primary btn-block">
+                    <b><i class="fas fa-envelope mr-2"></i>Contacter par mail</b>
+                </a>
+            </div>
+            <!-- /.card-body -->
+        </div>
+        {{-- FIN DE LA NOUVELLE CARTE --}}
 @endsection

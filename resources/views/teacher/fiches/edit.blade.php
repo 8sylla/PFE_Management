@@ -62,30 +62,41 @@
                     </h3>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">Veuillez évaluer cette proposition. Votre décision sera communiquée à l'étudiant.</p>
-                    <div class="form-group">
-                        <label>Statut de la Fiche</label>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio-accepte" name="Remarque" value="accepte" {{ old('Remarque', $data->Remarque) === 'accepte' ? 'checked' : '' }} required>
-                            <label for="radio-accepte" class="custom-control-label">Accepter la proposition</label>
+                    @if (strtolower($data->Remarque) === 'en attente')
+                        {{-- Si la fiche est EN ATTENTE, on affiche le formulaire de décision --}}
+                        <h5 class="form-section-title text-center text-info">Zone de Validation de l'Encadrant</h5>
+                        <p class="text-center text-muted mb-3">Veuillez évaluer et valider ou refuser cette proposition de PFE.</p>
+                        
+                        <div class="rad">
+                            <strong>Décision :</strong>
+                            <input name="Remarque" type="radio" value="accepte" id="radio-accepte" required/>
+                            <label for="radio-accepte">Accepter</label>
+                            
+                            <input name="Remarque" type="radio" value="refuse" id="radio-refuse" />
+                            <label for="radio-refuse">Refuser</label>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input" type="radio" id="radio-refuse" name="Remarque" value="refuse" {{ old('Remarque', $data->Remarque) === 'refuse' ? 'checked' : '' }}>
-                            <label for="radio-refuse" class="custom-control-label">Refuser la proposition</label>
+                        @error('Remarque') <div class="text-center text-danger mb-3">{{ $message }}</div> @enderror
+
+                        <button type="submit">
+                            <i class="fas fa-check-double mr-2"></i>Soumettre la décision
+                        </button>
+                    @else
+                        {{-- Si la fiche est ACCEPTÉE ou REFUSÉE, on affiche un message de statut --}}
+                        @php
+                            $isAccepted = strtolower($data->Remarque) === 'accepte';
+                            $alertClass = $isAccepted ? 'success' : 'danger';
+                            $iconClass = $isAccepted ? 'fas fa-check-circle' : 'fas fa-times-circle';
+                            $title = $isAccepted ? 'Proposition Acceptée' : 'Proposition Refusée';
+                        @endphp
+                        <div class="alert alert-{{ $alertClass }} text-center">
+                            <h4><i class="{{ $iconClass }}"></i> {{ $title }}</h4>
+                            <p>Une décision a déjà été prise pour cette fiche le {{ $data->updated_at->format('d/m/Y') }}. Aucune autre action n'est requise.</p>
                         </div>
-                        <div class="custom-control custom-radio">
-                            <input class="custom-control-input custom-control-input-warning" type="radio" id="radio-attente" name="Remarque" value="en Attente" {{ old('Remarque', $data->Remarque) === 'en Attente' ? 'checked' : '' }}>
-                            <label for="radio-attente" class="custom-control-label">Laisser en attente</label>
-                        </div>
-                    </div>
+                        
+                    @endif
                     @error('Remarque') <div class="text-danger mt-2">{{ $message }}</div> @enderror
                 </div>
-                <div class="card-footer">
-                    <button type="submit" class="btn btn-success btn-block">
-                        <i class="fas fa-save mr-2"></i>
-                        Enregistrer la décision
-                    </button>
-                </div>
+                
             </div>
         </div>
     </div>
